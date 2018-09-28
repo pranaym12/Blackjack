@@ -31,9 +31,7 @@ def in_game_status(still_in_game):
 #define event handlers for deal, hit, stand, and split
 def deal():
     global score, outcome, in_play, deck, my_hand, dealer_hand
-    if (in_play):
-        outcome = "You lost this round."
-        score -= 1
+
     in_play = True
     # your code goes here
     deck = Deck()
@@ -88,6 +86,8 @@ def stand():
                 message += in_game_status(False)
                 outcome="You win! New deal? | Value: "+str(my_hand.get_value())+" | Hand: "+my_hand.__str__()
                 score += 1
+            elif my_hand.get_value() == dealer_hand.get_value():
+                message = "\nYOU PUSH"
             else:
                 message = "\nYOU LOSE."
                 message+= in_game_status(False)
@@ -132,12 +132,12 @@ class Hand:
         
     def get_value(self):
         hand_value = 0
-        is_ace = False
+        has_ace = False
         for card in self.list_of_cards:
             hand_value += VALUES[card.get_rank()]
             if card.get_rank() == 'Ace':
-                is_ace = True
-        if not is_ace:
+                has_ace = True
+        if not has_ace:
             return hand_value
         else:
             if hand_value + 10 <= 21:
