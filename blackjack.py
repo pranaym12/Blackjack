@@ -1,36 +1,35 @@
-import random
+import random, time
 #check if Python 3 or 2.7
 from sys import version_info
 py3 = version_info[0] > 2 
 
 def my_input(text):
-	"""
-	Call this function instead of input or raw_input
-	to take into account Python 2.7 and Python 3 discrepancies
-	"""
+
 	if py3:
 		return input(text)
 	else:
 		return raw_input(text)	
 
+#message returned after every turn
 def in_game_status(still_in_game):
     if still_in_game:
         message="\nPlayer value is " + str(my_hand.get_value())
-        message+= "\nPlayer Hand contains "+my_hand.__str__()
+        message+= ", and contains "+my_hand.__str__()
         message+="\nDealer Hand contains "+dealer_hand.list_of_cards[0].__str__()
         message+=" (one card hidden)"
         message+="\nDealer value is "+str(dealer_hand.get_value())
         message+= "\nDealer Hand contains "+dealer_hand.__str__()
     else:
         message="\nPlayer value was " + str(my_hand.get_value())
-        message+= "\nPlayer Hand contained "+my_hand.__str__()
+        message+= ", and contained "+my_hand.__str__()
+        message+="\nPlayer has $"+str(total_cash)+" left."
         message+="\nDealer value was "+str(dealer_hand.get_value())
         message+= "\nDealer Hand contained "+dealer_hand.__str__()
     return message
 
 #define event handlers for deal, hit, stand, and split
 def deal():
-    global score, outcome, in_play, deck, my_hand, dealer_hand
+    global total_cash, in_play, deck, my_hand, dealer_hand
 
     in_play = True
     # your code goes here
@@ -46,7 +45,7 @@ def deal():
     return in_game_status(True)
 
 def hit():
-    global score, outcome, in_play, deck, my_hand, dealer_hand
+    global total_cash, in_play, deck, my_hand, dealer_hand
     
     if not in_play: 
         return "'not in play' error in the hit function."
@@ -56,14 +55,14 @@ def hit():
     elif my_hand.get_value() > 21:
         message = "YOU LOSE! You have busted!"
         message += in_game_status(False)
-        score -= 1
+        total_cash -= my_bet
         in_play = False
     return message
     # if the hand is in play, hit the player
-    # if busted, assign a message to outcome, update in_play and score
+    # if busted, assign a message to outcome, update in_play and total_cash
 
 def stand():
-    global score, outcome, in_play, deck, my_hand, dealer_hand
+    global total_cash, in_play, deck, my_hand, dealer_hand
     
     message = ""
     if not in_play: #never applicable
@@ -71,7 +70,7 @@ def stand():
     if my_hand.get_value() > 21:
         message = "YOU LOSE! You have busted!"
         message += in_game_status(False)
-        score -= 1
+        total_cash -= my_bet
     else:
         while dealer_hand.get_value() < 17:
             dealer_hand.add_card( deck.deal_card() )
@@ -79,19 +78,18 @@ def stand():
         if dealer_hand.get_value() > 21:
             message = "Dealer busted! YOU WON!!!"
             message += in_game_status(False)
-            score += 1
+            total_cash += my_bet
         else:
             if my_hand.get_value() > dealer_hand.get_value():
                 message = "\nYOU WON!!!"
                 message += in_game_status(False)
-                outcome="You win! New deal? | Value: "+str(my_hand.get_value())+" | Hand: "+my_hand.__str__()
-                score += 1
+                total_cash += my_bet
             elif my_hand.get_value() == dealer_hand.get_value():
                 message = "\nYOU PUSH"
             else:
                 message = "\nYOU LOSE."
                 message+= in_game_status(False)
-                score -= 1
+                total_cash -= my_bet
     in_play = False
     return message
     # if hand is in play, repeatedly hit dealer until his hand has value 17 or more
@@ -179,14 +177,31 @@ VALUES = {'Ace':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8, '9':9, '10':
 # initialize some useful global variables
 in_play = False
 program_running = True
-outcome = ""
 instructions = ""
-score = 0
+total_cash = 50
+my_bet = 0
 #deck = Deck()
+
+def initialize_bet():
+    has_given_int = False
+    print("You have $"+str(total_cash)+". How much would you like to bet?")
+    
+    while not has_given_int:
+        bet_response = my_input("Please enter an integer from 1 to "+str(total_cash)+" inclusive.\n")
+
+        if type(bet_response)==int:
+            bet_response_int = int(bet_response)
+            if 1<=bet_response_int and bet_response_int<=total_cash:
+                has_given_int = True
+    print("You have $"+str(total_cash)+" and your bet is $"+str(bet_response)+".")
+    return bet_response
+
 
 welcomeMessage="Welcome to Blackjack by Pranay Mittal!\nHit enter to start a new game!"
 my_input(welcomeMessage)
 while program_running:
+    my_bet = int(initialize_bet())
+    time.sleep(2) #wait 2 seconds?
     response = my_input(deal()+"\nType h for hit, s for stand, or g for split.\n")
     while in_play:
         if response == 'h':
@@ -202,6 +217,9 @@ while program_running:
         #NEED TO IMPLEMENT SPLIT
         else:
             response = my_input("Type h for hit, s for stand, or g for split.\n")
+    if(total_cash <= 0):
+        print("You are out of money. Game over.")
+        break
     again_input = "Game is over.\nType yes to play again. "
     again_input += "Type anything else to end the program.\n"
     again_response = my_input(again_input)
