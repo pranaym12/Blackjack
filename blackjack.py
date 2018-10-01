@@ -3,13 +3,14 @@ import random, time
 from sys import version_info
 py3 = version_info[0] > 2 
 
+#replace input and raw_input
 def my_input(text):
-
 	if py3:
 		return input(text)
 	else:
 		return raw_input(text)	
 
+#asks for user's bet, and checks it's a valid int
 def initialize_bet():
     global total_cash, my_bet
     print("You have $"+str(total_cash)+". How much would you like to bet?")
@@ -105,22 +106,22 @@ def stand():
             time.sleep(0.5)
             
         if dealer_hand.get_value() > 21:
-            message = "\nDealer busted! YOU WON!!!"
+            message = "\nYOU WON!!! Dealer busted!"
             total_cash += 2*my_bet #re-win bet $ and dealer's $
             message += in_game_status(False)
         else:
             if my_hand.get_value() > dealer_hand.get_value():
-                message = "\nYOU WON!!!"
+                message = "\nYOU WON!!! You have a higher score than the Dealer!"
                 total_cash += 2*my_bet #re-win bet $ and dealer's $
                 message += in_game_status(False)
                 
             elif my_hand.get_value() == dealer_hand.get_value():
-                message = "\nYOU PUSH"
+                message = "\nYOU PUSH. You and Dealer have the same score."
                 total_cash += my_bet #tie: regain money from bet
                 message += in_game_status(False)
 
             else:
-                message = "\nYOU LOSE."
+                message = "\nYOU LOSE. Dealer has a higher score than you."
                 total_cash += 0 #no change
                 message+= in_game_status(False)
     in_play = False
@@ -233,7 +234,6 @@ while program_running:
         elif response == 's':
             response = stand()
             print(response)
-        #NEED TO IMPLEMENT SPLIT
         else:
             response = my_input("Type h for hit, s for stand.\n")
     time.sleep(0.3)
