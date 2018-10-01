@@ -68,7 +68,11 @@ def hit():
     
     if not in_play: 
         return "'not in play' error in the hit function."
-    my_hand.add_card( deck.deal_card() )
+    new_card = deck.deal_card()
+    print("\nAdding new card: ")
+    time.sleep(0.3)
+    print(new_card)
+    my_hand.add_card( new_card )
     if my_hand.get_value() <= 21:
         message = in_game_status(True)
     elif my_hand.get_value() > 21:
@@ -97,7 +101,7 @@ def stand():
         while dealer_hand.get_value() < 17:
             new_card = deck.deal_card()
             dealer_hand.add_card(new_card)
-            print new_card
+            print(new_card)
             time.sleep(0.5)
             
         if dealer_hand.get_value() > 21:
