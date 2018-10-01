@@ -69,14 +69,11 @@ def hit():
         message = in_game_status(True)
     elif my_hand.get_value() > 21:
         message = "\nYOU LOSE! You have busted!"
-
         message += in_game_status(False)
         total_cash += 0 # no change, lost
         in_play = False
     return message
-    # if the hand is in play, hit the player
-    # if busted, assign a message to outcome, update in_play and total_cash
-
+    
 def stand():
     global total_cash, in_play, deck, my_hand, dealer_hand
     
@@ -100,7 +97,7 @@ def stand():
             time.sleep(0.5)
             
         if dealer_hand.get_value() > 21:
-            message = "Dealer busted! YOU WON!!!"
+            message = "\nDealer busted! YOU WON!!!"
             total_cash += 2*my_bet #re-win bet $ and dealer's $
             message += in_game_status(False)
         else:
