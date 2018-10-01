@@ -13,22 +13,17 @@ def my_input(text):
 def initialize_bet():
     global total_cash, my_bet
     print("You have $"+str(total_cash)+". How much would you like to bet?")
-    has_given_int = False
-    while not has_given_int:
+    has_given_proper_int = False
+    while not has_given_proper_int:
         bet_response_str = my_input("Please enter an integer from 1 to "+str(total_cash)+" inclusive.\n")
-        is_int = False
-        #bet_response_int = int(bet_response_str)
         
         try:
-            int(bet_response_str)
-            is_int = True
-        except ValueError:
-            is_int = False
-
-        if is_int:
             bet_response_int = int(bet_response_str)
             if 1<=bet_response_int and bet_response_int<=total_cash:
-                has_given_int = True
+                has_given_proper_int = True
+        except ValueError:    
+            has_given_proper_int = False        
+        
     my_bet = bet_response_int
     total_cash -= my_bet
     print("You have $"+str(total_cash)+" and your bet is $"+bet_response_str+".")
