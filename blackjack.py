@@ -35,8 +35,8 @@ def in_game_status(still_in_game):
         #message+="\nDealer value is "+str(dealer_hand.get_value()) #show dealer's Hand for testing
         #message+= "\nDealer Hand contains "+dealer_hand.__str__()
     else:
-        message+="\nPlayer has $"+str(total_cash)+" left."
-        message="\nPlayer value was " + str(my_hand.get_value())
+        message="\nPlayer has $"+str(total_cash)+" left."
+        message+="\nPlayer value was " + str(my_hand.get_value())
         message+= ", and contained "+my_hand.__str__()
         message+="\nDealer value was "+str(dealer_hand.get_value())
         message+= "\nDealer Hand contained "+dealer_hand.__str__()
