@@ -32,18 +32,18 @@ def initialize_bet():
 def in_game_status(still_in_game):
     time.sleep(.3)
     if still_in_game:
-        message="\nPlayer value is " + str(my_hand.get_value())
+        message="\nPlayer's value is " + str(my_hand.get_value())
         message+= ", and contains "+my_hand.__str__()
-        message+="\nDealer Hand contains "+dealer_hand.list_of_cards[0].__str__()
+        message+="\nDealer's Hand contains "+dealer_hand.list_of_cards[0].__str__()
         message+=" (one card hidden)"
         #message+="\nDealer value is "+str(dealer_hand.get_value()) #show dealer's Hand for testing
         #message+= "\nDealer Hand contains "+dealer_hand.__str__()
     else:
         message="\nPlayer has $"+str(total_cash)+" left."
-        message+="\nPlayer value was " + str(my_hand.get_value())
-        message+= ", and contained "+my_hand.__str__()
-        message+="\nDealer value was "+str(dealer_hand.get_value())
-        message+= "\nDealer Hand contained "+dealer_hand.__str__()
+        message+="\nPlayer's value was " + str(my_hand.get_value())
+        message+= ", and hand contained "+my_hand.__str__()
+        message+="\nDealer's value was "+str(dealer_hand.get_value())
+        message+= ", and hand contained "+dealer_hand.__str__()
     return message
 
 #define event handlers for deal, hit, stand, and split
