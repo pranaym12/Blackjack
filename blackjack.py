@@ -10,19 +10,34 @@ def my_input(text):
 	else:
 		return raw_input(text)	
 
+def initialize_bet():
+    global total_cash, my_bet
+    print("You have $"+str(total_cash)+". How much would you like to bet?")
+    has_given_int = False
+    while not has_given_int:
+        bet_response_str = my_input("Please enter an integer from 1 to "+str(total_cash)+" inclusive.\n")
+        bet_response_int = int(bet_response_str)
+        if type(bet_response_int)==int:
+            if 1<=bet_response_int and bet_response_int<=total_cash:
+                has_given_int = True
+    my_bet = bet_response_int
+    total_cash -= my_bet
+    print("You have $"+str(total_cash)+" and your bet is $"+bet_response_str+".")
+
 #message returned after every turn
 def in_game_status(still_in_game):
+    time.sleep(.3)
     if still_in_game:
         message="\nPlayer value is " + str(my_hand.get_value())
         message+= ", and contains "+my_hand.__str__()
         message+="\nDealer Hand contains "+dealer_hand.list_of_cards[0].__str__()
         message+=" (one card hidden)"
-        message+="\nDealer value is "+str(dealer_hand.get_value())
-        message+= "\nDealer Hand contains "+dealer_hand.__str__()
+        #message+="\nDealer value is "+str(dealer_hand.get_value()) #show dealer's Hand for testing
+        #message+= "\nDealer Hand contains "+dealer_hand.__str__()
     else:
+        message+="\nPlayer has $"+str(total_cash)+" left."
         message="\nPlayer value was " + str(my_hand.get_value())
         message+= ", and contained "+my_hand.__str__()
-        message+="\nPlayer has $"+str(total_cash)+" left."
         message+="\nDealer value was "+str(dealer_hand.get_value())
         message+= "\nDealer Hand contained "+dealer_hand.__str__()
     return message
@@ -53,9 +68,10 @@ def hit():
     if my_hand.get_value() <= 21:
         message = in_game_status(True)
     elif my_hand.get_value() > 21:
-        message = "YOU LOSE! You have busted!"
+        message = "\nYOU LOSE! You have busted!"
+
         message += in_game_status(False)
-        total_cash -= my_bet
+        total_cash += 0 # no change, lost
         in_play = False
     return message
     # if the hand is in play, hit the player
@@ -69,27 +85,39 @@ def stand():
         return "hmmm"
     if my_hand.get_value() > 21:
         message = "YOU LOSE! You have busted!"
+        total_cash += 0 #no change
         message += in_game_status(False)
-        total_cash -= my_bet
     else:
+        if dealer_hand.get_value() < 17:
+            print("\nDealer's hand contains: "+dealer_hand.__str__())
+            time.sleep(0.3)
+            print("Adding new cards:")
+            time.sleep(0.3)
         while dealer_hand.get_value() < 17:
-            dealer_hand.add_card( deck.deal_card() )
+            new_card = deck.deal_card()
+            dealer_hand.add_card(new_card)
+            print new_card
+            time.sleep(0.5)
             
         if dealer_hand.get_value() > 21:
             message = "Dealer busted! YOU WON!!!"
+            total_cash += 2*my_bet #re-win bet $ and dealer's $
             message += in_game_status(False)
-            total_cash += my_bet
         else:
             if my_hand.get_value() > dealer_hand.get_value():
                 message = "\nYOU WON!!!"
+                total_cash += 2*my_bet #re-win bet $ and dealer's $
                 message += in_game_status(False)
-                total_cash += my_bet
+                
             elif my_hand.get_value() == dealer_hand.get_value():
                 message = "\nYOU PUSH"
+                total_cash += my_bet #tie: regain money from bet
+                message += in_game_status(False)
+
             else:
                 message = "\nYOU LOSE."
+                total_cash += 0 #no change
                 message+= in_game_status(False)
-                total_cash -= my_bet
     in_play = False
     return message
     # if hand is in play, repeatedly hit dealer until his hand has value 17 or more
@@ -182,32 +210,18 @@ total_cash = 50
 my_bet = 0
 #deck = Deck()
 
-def initialize_bet():
-    has_given_int = False
-    print("You have $"+str(total_cash)+". How much would you like to bet?")
-    
-    while not has_given_int:
-        bet_response = my_input("Please enter an integer from 1 to "+str(total_cash)+" inclusive.\n")
-
-        if type(bet_response)==int:
-            bet_response_int = int(bet_response)
-            if 1<=bet_response_int and bet_response_int<=total_cash:
-                has_given_int = True
-    print("You have $"+str(total_cash)+" and your bet is $"+str(bet_response)+".")
-    return bet_response
-
-
-welcomeMessage="Welcome to Blackjack by Pranay Mittal!\nHit enter to start a new game!"
+welcomeMessage="\nWelcome to Blackjack by Pranay Mittal!\nHit enter to start a new game!"
 my_input(welcomeMessage)
+print("")
 while program_running:
-    my_bet = int(initialize_bet())
-    time.sleep(2) #wait 2 seconds?
-    response = my_input(deal()+"\nType h for hit, s for stand, or g for split.\n")
+    initialize_bet()
+    time.sleep(.3) #wait .3 seconds
+    response = my_input(deal()+"\nType h for hit, s for stand.\n")
     while in_play:
         if response == 'h':
             response_message = hit()
             if in_play:
-                response_message += "\nType h for hit, s for stand, or g for split.\n"
+                response_message += "\nType h for hit, s for stand.\n"
                 response = my_input(response_message)
             else:
                 print(response_message)
@@ -216,15 +230,19 @@ while program_running:
             print(response)
         #NEED TO IMPLEMENT SPLIT
         else:
-            response = my_input("Type h for hit, s for stand, or g for split.\n")
+            response = my_input("Type h for hit, s for stand.\n")
+    time.sleep(0.3)
     if(total_cash <= 0):
-        print("You are out of money. Game over.")
+        print("\nGame over. You are out of money.")
         break
-    again_input = "Game is over.\nType yes to play again. "
+    time.sleep(0.3)
+    again_input = "\nRound over. You have $"+str(total_cash)+".\nType yes to play again. "
     again_input += "Type anything else to end the program.\n"
     again_response = my_input(again_input)
     if again_response != "yes":
         program_running = False
+        break
+    print("")
 print("Program is terminated.")
 
 
