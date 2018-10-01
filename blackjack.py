@@ -16,8 +16,17 @@ def initialize_bet():
     has_given_int = False
     while not has_given_int:
         bet_response_str = my_input("Please enter an integer from 1 to "+str(total_cash)+" inclusive.\n")
-        bet_response_int = int(bet_response_str)
-        if type(bet_response_int)==int:
+        is_int = False
+        #bet_response_int = int(bet_response_str)
+        
+        try:
+            int(bet_response_str)
+            is_int = True
+        except ValueError:
+            is_int = False
+
+        if is_int:
+            bet_response_int = int(bet_response_str)
             if 1<=bet_response_int and bet_response_int<=total_cash:
                 has_given_int = True
     my_bet = bet_response_int
