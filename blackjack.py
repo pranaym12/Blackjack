@@ -1,5 +1,5 @@
 import random, time
-#check if Python 3 or 2.7
+#check if Python 3 or 2
 from sys import version_info
 py3 = version_info[0] > 2 
 
