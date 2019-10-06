@@ -7,7 +7,7 @@ Run the file "blackjack.py" by typing in the terminal "python blackjack.py".
 This will run the code, and follow the instructions provided.
 
 3. Choice of tooling:
-I wrote my code in Python 2.7x.
+I wrote my code in Python. The program runs in either Python 2.7 or Python 3, depending on what version is installed on your computer.
 I chose Python for its ubiquity and my familiarity with the language.
 
 4. -I chose to make Card, Hand, and Deck their own classes for the ease of 
