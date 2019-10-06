@@ -15,5 +15,3 @@ creating a deck and dealing cards to a hand.
 This way, it would be easy to implement 2-player functionality in the future.
 -Also, I use time.sleep() throughout the program to provide a slight pause while
 info is printed. This way, it's easier for the user to distinguish between different info.
--Additionally, I chose not to implement splitting because it would be difficult
-for the user to visualize in a terminal, instead of a GUI.
