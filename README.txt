@@ -11,7 +11,6 @@ I wrote my code in Python. The program runs in either Python 2.7 or Python 3, de
 I chose Python for its ubiquity and my familiarity with the language.
 
 4. -I chose to make Card, Hand, and Deck their own classes for the ease of 
-creating a deck and dealing cards to a hand. 
-This way, it would be easy to implement 2-player functionality in the future.
+creating a deck and dealing cards to a hand. This made it easy to deal cards without having to keep track of which cards are left.
 -Also, I use time.sleep() throughout the program to provide a slight pause while
 info is printed. This way, it's easier for the user to distinguish between different info.
